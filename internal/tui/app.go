@@ -44,9 +44,12 @@ type Model struct {
 	spec        *spec.Swagger
 	keys        keyMap
 	history     *History
+
+	// Post application state
+	returnedError error
 }
 
-func NewModel(swagger *spec.Swagger) *Model {
+func NewModel() *Model {
 	m := Model{
 		width:       0,
 		height:      0,
@@ -57,7 +60,6 @@ func NewModel(swagger *spec.Swagger) *Model {
 		mainViewModel:      nil,
 
 		currentPath: "",
-		spec:        swagger,
 		keys:        newKeyMap(),
 		history:     NewHistory(),
 	}
@@ -86,6 +88,7 @@ func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	// Initial msg
 	case initMsg:
 		if msg.err != nil {
+			m.returnedError = fmt.Errorf("init error: %w", msg.err)
 			return m, tea.Quit
 		}
 
@@ -187,6 +190,10 @@ func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	return m, nil
+}
+
+func (m *Model) Error() error {
+	return m.returnedError
 }
 
 // internal methods
