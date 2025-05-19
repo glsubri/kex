@@ -13,7 +13,11 @@ run: build
 	@echo "\nRunning $(BINARY_NAME)...\n"
 	@./$(BINARY_NAME)
 
+install:
+	@echo "Installing $(BINARY_NAME)..."
+	@go install ./cmd/kex
+
 # Clean build artifacts
 clean:
 	@echo "Cleaning..."
-	@rm -f $(BINARY_NAME) 
+	@rm -f $(BINARY_NAME)
